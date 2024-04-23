@@ -1,97 +1,85 @@
-import React, { useState, useRef, useCallback } from "react";
-import ReactFlow, {
-  ReactFlowProvider,
-  addEdge,
-  useNodesState,
-  useEdgesState,
-  Controls,
-} from "reactflow";
-import "reactflow/dist/style.css";
-
-import Sidebar from "./Sidebar";
+import React, { useEffect, useState } from "react";
+import ReactFlow, { useNodesState, useEdgesState } from "reactflow";
 
 import "./ChatBot.css";
 
 const initialNodes = [
-  {
-    id: "1",
-    type: "input",
-    data: { label: "input node" },
-    position: { x: 250, y: 5 },
-  },
+  { id: "1", data: { label: "Node 1" }, position: { x: 100, y: 100 } },
+  { id: "2", data: { label: "Node 2" }, position: { x: 100, y: 200 } },
 ];
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
+const defaultViewport = { x: 0, y: 0, zoom: 1.5 };
 
-const ChatBot = () => {
-  const reactFlowWrapper = useRef(null);
+export default function ChatBot() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [selectedNode, setSelectedNode] = useState(1);
 
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    []
-  );
+  const [nodeName, setNodeName] = useState("Node 1");
+  const [nodeHidden, setNodeHidden] = useState(false);
 
-  const onDragOver = useCallback((event) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-  }, []);
+  useEffect(() => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === selectedNode.toString()) {
+          // it's important that you create a new object here
+          // in order to notify react flow about the change
+          node.data = {
+            ...node.data,
+            label: nodeName,
+          };
+        }
 
-  const onDrop = useCallback(
-    (event) => {
-      event.preventDefault();
+        return node;
+      })
+    );
+  }, [nodeName, setNodes]);
 
-      const type = event.dataTransfer.getData("application/reactflow");
+  useEffect(() => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === "1") {
+          // when you update a simple type you can just update the value
+          node.hidden = nodeHidden;
+        }
 
-      // check if the dropped element is valid
-      if (typeof type === "undefined" || !type) {
-        return;
-      }
+        return node;
+      })
+    );
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.id === "e1-2") {
+          edge.hidden = nodeHidden;
+        }
 
-      // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
-      // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
-      const position = reactFlowInstance.screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
-      const newNode = {
-        id: getId(),
-        type,
-        position,
-        data: { label: `${type} node` },
-      };
-
-      setNodes((nds) => nds.concat(newNode));
-    },
-    [reactFlowInstance]
-  );
+        return edge;
+      })
+    );
+  }, [nodeHidden, setNodes, setEdges]);
 
   return (
-    <div className="dndflow">
-      <ReactFlowProvider>
-        <div className="reactflow-wrapper" ref={reactFlowWrapper}>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            onInit={setReactFlowInstance}
-            onDrop={onDrop}
-            onDragOver={onDragOver}
-            fitView
-          >
-            <Controls />
-          </ReactFlow>
-        </div>
-        <Sidebar />
-      </ReactFlowProvider>
-    </div>
+    <ReactFlow
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      defaultViewport={defaultViewport}
+      minZoom={0.2}
+      maxZoom={4}
+      attributionPosition="bottom-left"
+      onNodeClick={(evt, node) => {
+        setSelectedNode(parseInt(node.id));
+        setNodeName(node.data.label);
+      }}
+    >
+      <div className="updatenode__controls">
+        <label>label:</label>
+        <input
+          value={nodeName}
+          onChange={(evt) => setNodeName(evt.target.value)}
+        />
+      </div>
+    </ReactFlow>
   );
-};
-
-export default ChatBot;
+}
