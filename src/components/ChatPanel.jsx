@@ -1,7 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import ReactFlow, { useNodesState, useEdgesState } from "reactflow";
+import ReactFlow, {
+  useNodesState,
+  useEdgesState,
+  ReactFlowProvider,
+} from "reactflow";
 
-import "./ChatBot.css";
+import "./ChatPanel.css";
 import { BiMessageRoundedDetail } from "react-icons/bi";
 import Sidebar from "./Sidebar";
 import SingleNdode from "./SingleNode";
@@ -70,43 +74,48 @@ export default function ChatBot() {
   console.log("selectedNode", selectedNode);
 
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      defaultViewport={defaultViewport}
-      minZoom={0.2}
-      maxZoom={4}
-      attributionPosition="bottom-left"
-      onNodeClick={(evt, node) => {
-        setSelectedNode(parseInt(node.id));
-        setNodeName(node.data.label);
-        setIsNodeSelected(true);
-      }}
-      onPaneClick={() => {
-        setSelectedNode(null);
-        setIsNodeSelected(false);
-      }}
-      nodeTypes={nodeTypes}
-    >
-      <div className="updatenode__controls border-2 border-gray-2 rounde-sm h-full">
-        {isNodeSelected ? (
-          <div>
-            <label>label:</label>
-            <input
-              value={nodeName}
-              onChange={(evt) => setNodeName(evt.target.value)}
-              className="border-2 border-black rounded-sm p-1 w-full mb-2"
-            />
+    <div className="dndflow">
+      <ReactFlowProvider>
+        <div className="reactflow-wrapper">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            defaultViewport={defaultViewport}
+            minZoom={0.2}
+            maxZoom={4}
+            attributionPosition="bottom-left"
+            onNodeClick={(evt, node) => {
+              setSelectedNode(parseInt(node.id));
+              setNodeName(node.data.label);
+              setIsNodeSelected(true);
+            }}
+            onPaneClick={() => {
+              setSelectedNode(null);
+              setIsNodeSelected(false);
+            }}
+            nodeTypes={nodeTypes}
+          ></ReactFlow>
+          <div className="updatenode__controls border-2 border-gray-300 rounde-sm md:min-w-60 h-[calc(100vh-3.5rem)] fixed top-14 bottom-0 right-0 p-4">
+            {isNodeSelected ? (
+              <div>
+                <label>label:</label>
+                <input
+                  value={nodeName}
+                  onChange={(evt) => setNodeName(evt.target.value)}
+                  className="border-2 border-black rounded-sm p-1 w-full mb-2"
+                />
+              </div>
+            ) : (
+              <div className="text-blue-600 flex justify-center items-center flex-col border-2 border-blue-600 rounded-lg w-fit px-12 py-2">
+                <BiMessageRoundedDetail className="text-4xl" />
+                <p>Message</p>
+              </div>
+            )}
           </div>
-        ) : (
-          <div>
-            <BiMessageRoundedDetail className="text-4xl" />
-            <p>Message</p>
-          </div>
-        )}
-      </div>
-    </ReactFlow>
+        </div>
+      </ReactFlowProvider>
+    </div>
   );
 }

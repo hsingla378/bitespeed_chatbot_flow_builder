@@ -11,7 +11,7 @@ export default function SingleNdode({ data }) {
   }, []);
 
   return (
-    <div className="border border-1 border-black rounded-lg overflow-hidden md:min-w-60 text-xs">
+    <div className="border border-1 border-black rounded-lg overflow-hidden md:min-w-60 text-xs shadow-2xl">
       <Handle type="source" position={Position.Left} />
       <div>
         <div className="flex justify-between items-center bg-green-200  px-4 py-[6px]">
