@@ -1,32 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
+import Toast from "./Toast";
 
-const Toast = ({ message, type }) => {
-  return (
-    <div
-      className={`toast ${type} fixed bottom-10 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-md text-white`}
-    >
-      <p>{message}</p>
-    </div>
-  );
-};
-
-export const Header = ({ isConnected }) => {
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("");
-
-  const handleClick = () => {
-    if (isConnected) {
-      setToastMessage("Saved successfully!");
-      setToastType("bg-green-500");
-    } else {
-      setToastMessage("Error: All nodes are not connected");
-      setToastType("bg-red-500");
-    }
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
-  };
-
+const Header = ({ showToast, handleClick, toastMessage, toastType }) => {
   return (
     <div className="relative">
       <div className="bg-slate-200 py-2 px-4 text-end text-sm h-14 sticky top-0 flex justify-between items-center">
@@ -44,3 +19,5 @@ export const Header = ({ isConnected }) => {
     </div>
   );
 };
+
+export default Header;
