@@ -25,7 +25,7 @@ export default function SingleNdode({ data, selected, onClick }) {
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
     >
-      <Handle type="source" position={Position.Left} />
+      <Handle type="target" position={Position.Left} />
       <div>
         <div
           className={`flex justify-between items-center bg-green-200 px-4 py-[6px] ${
@@ -42,7 +42,7 @@ export default function SingleNdode({ data, selected, onClick }) {
         </div>
         <p className="p-3">{data.label}</p>
       </div>
-      <Handle type="target" position={Position.Right} id="a" />
+      <Handle type="source" position={Position.Right} id="a" />
     </div>
   );
 }
