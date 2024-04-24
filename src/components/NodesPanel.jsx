@@ -121,10 +121,11 @@ export default function NodesPanel() {
         x: event.clientX,
         y: event.clientY,
       });
+
       const newNode = {
         id: getId(),
         data: { label: "text message " + parseInt(nodes.length + 1) },
-        position: { x: 500, y: 100 },
+        position: { x: position.x - 100, y: position.y - 50 },
         type: "textUpdater",
       };
 
