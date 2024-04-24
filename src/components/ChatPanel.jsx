@@ -18,21 +18,23 @@ const initialNodes = [
   {
     id: "1",
     data: { label: "Node 1" },
-    position: { x: 100, y: 0 },
+    position: { x: 100, y: 250 },
     type: "textUpdater",
   },
   {
     id: "2",
     data: { label: "Node 2" },
-    position: { x: 100, y: 200 },
+    position: { x: 400, y: 200 },
     type: "textUpdater",
   },
 ];
 
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
-const defaultViewport = { x: 0, y: 0, zoom: 1.5 };
+localStorage.setItem("nodes", JSON.stringify(initialNodes));
 
-let id = 0;
+const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
+const defaultViewport = { x: 0, y: 0, zoom: 1.2 };
+
+let id = 2;
 const getId = () => `dndnode_${id++}`;
 
 export default function ChatBot() {
@@ -119,6 +121,8 @@ export default function ChatBot() {
         type: "textUpdater",
       };
 
+      // localStorage.setItem("nodes", JSON.stringify(nodes.concat(newNode)));
+
       setNodes((nds) => nds.concat(newNode));
     },
     [reactFlowInstance, nodes, setNodes]
@@ -138,7 +142,7 @@ export default function ChatBot() {
             maxZoom={4}
             attributionPosition="bottom-left"
             onNodeClick={(evt, node) => {
-              setSelectedNode(parseInt(node.id));
+              setSelectedNode(node.id);
               setNodeName(node.data.label);
               setIsNodeSelected(true);
             }}
@@ -184,7 +188,7 @@ export default function ChatBot() {
                 <div
                   className="text-blue-600 flex justify-center items-center flex-col border-2 border-blue-600 rounded-lg w-fit px-12 py-2"
                   draggable // Add draggable attribute here
-                  onDragStart={(event) => onDragStart(event, "input")} // Handle dragstart event
+                  onDragStart={(event) => onDragStart(event, "default")} // Handle dragstart event
                 >
                   <BiMessageRoundedDetail className="text-4xl" />
                   <p>Message</p>

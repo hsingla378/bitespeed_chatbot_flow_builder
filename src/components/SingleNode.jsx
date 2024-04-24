@@ -18,7 +18,7 @@ export default function SingleNdode({ data, selected, onClick }) {
 
   return (
     <div
-      className={`border border-1 rounded-lg overflow-hidden md:min-w-60 text-xs shadow-2xl ${
+      className={`bg-white border  rounded-lg overflow-hidden md:min-w-60 max-w-60 text-xs shadow-2xl ${
         selected ? "border-blue-500" : "border-black"
       } ${isHovered ? "border-2" : ""}`}
       onMouseEnter={handleMouseEnter}
@@ -40,7 +40,7 @@ export default function SingleNdode({ data, selected, onClick }) {
             <IoLogoWhatsapp className="text-green-500 " />
           </span>
         </div>
-        <p className="p-3">{data.label}</p>
+        <p className="p-3 h-auto">{data.label}</p>
       </div>
       <Handle type="source" position={Position.Right} id="a" />
     </div>
