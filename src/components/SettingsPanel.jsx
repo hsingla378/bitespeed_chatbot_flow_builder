@@ -1,7 +1,7 @@
 import { BiMessageRoundedDetail } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa6";
 
-export default function NodeControls({
+export default function SettingsPanel({
   isNodeSelected,
   nodeName,
   setNodeName,

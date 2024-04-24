@@ -8,19 +8,18 @@ import ReactFlow, {
   getConnectedEdges,
 } from "reactflow";
 
-import NodeControls from "./NodeControls";
+import SettingsPanel from "./SettingsPanel";
 import { initialEdges, initialNodes, defaultViewport } from "../utils/constant";
 
-import SingleNode from "./SingleNode";
-import Toast from "./Toast"; // Assuming Toast component is in a separate file
+import TextNode from "./TextNode";
 import Header from "./Header";
 
 // Function to generate unique node IDs
 let id = 2;
 const getId = () => `dndnode_${id++}`;
 
-// Main ChatPanel component
-export default function ChatPanel() {
+// Main NodesPanel component
+export default function NodesPanel() {
   // State variables
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -35,7 +34,7 @@ export default function ChatPanel() {
   const [nodeHidden, setNodeHidden] = useState(false);
 
   // Memoized node types
-  const nodeTypes = useMemo(() => ({ textUpdater: SingleNode }), []);
+  const nodeTypes = useMemo(() => ({ textUpdater: TextNode }), []);
 
   // Callback function for connecting nodes
   const onConnect = useCallback(
@@ -49,7 +48,7 @@ export default function ChatPanel() {
       setToastMessage("Saved successfully!");
       setToastType("bg-green-500");
     } else {
-      setToastMessage("Error: All nodes are not connected");
+      setToastMessage("Cannot save Flow");
       setToastType("bg-red-500");
     }
     setShowToast(true);
@@ -142,11 +141,11 @@ export default function ChatPanel() {
         toastMessage={toastMessage}
         toastType={toastType}
       />
-      {/* Main ChatPanel content */}
+      {/* Main NodesPanel content */}
       <div className="flex flex-col h-full">
         <ReactFlowProvider>
           <div className="flex flex-grow">
-            {/* ReactFlow graph */}
+            {/* ReactFlow Panel */}
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -174,7 +173,7 @@ export default function ChatPanel() {
               <Controls />
             </ReactFlow>
             {/* Controls for updating node */}
-            <NodeControls
+            <SettingsPanel
               isNodeSelected={isNodeSelected}
               nodeName={nodeName}
               setNodeName={setNodeName}

@@ -29,7 +29,7 @@ const MessageContent = ({ data }) => {
 };
 
 // Main component for the single node
-const SingleNode = ({ data, selected, onClick }) => {
+const TextNode = ({ data, selected, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = useCallback(() => {
@@ -56,4 +56,4 @@ const SingleNode = ({ data, selected, onClick }) => {
   );
 };
 
-export default SingleNode;
+export default TextNode;
