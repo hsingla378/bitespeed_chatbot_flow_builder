@@ -9,11 +9,13 @@ const CustomHandle = () => {
 };
 
 // Component for the message content
-const MessageContent = ({ data }) => {
+const MessageContent = ({ data, selected }) => {
   return (
     <div>
       <div
-        className={`flex justify-between items-center bg-green-200 px-4 py-[6px]`}
+        className={`flex justify-between items-center  px-4 py-[6px] ${
+          selected ? "bg-blue-200 " : "bg-green-200"
+        } `}
       >
         <div className="flex justify-center items-center gap-1">
           <BiMessageRoundedDetail />
@@ -43,14 +45,14 @@ const TextNode = ({ data, selected, onClick }) => {
   return (
     <div
       className={`bg-white border-2  rounded-lg overflow-hidden md:min-w-60 max-w-60 text-xs shadow-2xl ${
-        selected ? "border-blue-500" : "border-black"
-      } ${isHovered ? "border-2" : ""}`}
+        selected ? "border-blue-500 " : "border-black"
+      } ${isHovered ? "border-2 border-blue-500 " : ""}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
     >
       <CustomHandle />
-      <MessageContent data={data} />
+      <MessageContent data={data} selected={selected} />
       <Handle type="source" position={Position.Right} id="a" />
     </div>
   );

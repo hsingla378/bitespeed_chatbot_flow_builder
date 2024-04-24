@@ -10,7 +10,7 @@ export default function SettingsPanel({
   onDragStart,
 }) {
   return (
-    <div className="updatenode__controls border-2 border-gray-300 rounded-sm md:min-w-60 h-[calc(100vh-3.5rem)] fixed top-14 bottom-0 right-0 bg-white">
+    <div className="border-0 flex justify-center items-center md:items-baseline md:justify-normal border-t-2 md:border-2 border-gray-300 h-8h rounded-sm md:min-w-60 md:h-[calc(100vh-3.5rem)] md:fixed md:top-14 bottom-0 right-0 bg-white">
       {isNodeSelected ? (
         <div>
           <div className="flex justify-between items-center text-base border-b-2 py-2 px-4">
@@ -38,7 +38,7 @@ export default function SettingsPanel({
         <div className="p-4">
           {" "}
           <div
-            className="text-blue-600 flex justify-center items-center flex-col border-2 border-blue-600 rounded-lg w-fit px-12 py-2"
+            className="cursor-grab text-blue-600 flex justify-center items-center flex-col border-2 border-blue-600 rounded-lg w-fit px-12 py-2"
             draggable
             onDragStart={(event) => onDragStart(event, "default")}
           >

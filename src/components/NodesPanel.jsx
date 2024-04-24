@@ -143,9 +143,9 @@ export default function NodesPanel() {
         toastType={toastType}
       />
       {/* Main NodesPanel content */}
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-[calc(100%-8vh)]">
         <ReactFlowProvider>
-          <div className="flex flex-grow">
+          <div className="flex flex-grow flex-col md:flex-row">
             {/* ReactFlow Panel */}
             <ReactFlow
               nodes={nodes}
