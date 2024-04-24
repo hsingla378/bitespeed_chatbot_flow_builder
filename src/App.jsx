@@ -8,8 +8,7 @@ import { Header } from "./components/Header";
 export default function App() {
   return (
     <>
-      <Header />
-      <div className="h-[calc(100vh-3.5rem)] w-[calc(100vw-15rem)]">
+      <div className="h-[calc(100vh-3.5rem)]">
         <ChatBot />
       </div>
     </>

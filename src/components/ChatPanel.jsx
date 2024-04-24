@@ -44,6 +44,9 @@ export default function ChatPanel() {
   const nodeTypes = useMemo(() => ({ textUpdater: SingleNode }), []);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
 
   const [nodeName, setNodeName] = useState("Node 1");
   const [nodeHidden, setNodeHidden] = useState(false);
@@ -52,6 +55,28 @@ export default function ChatPanel() {
     (params) => setEdges((eds) => addEdge(params, eds)),
     []
   );
+
+  const Toast = ({ message, type }) => {
+    return (
+      <div
+        className={`toast ${type} fixed bottom-10 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-md text-white`}
+      >
+        <p>{message}</p>
+      </div>
+    );
+  };
+
+  const handleClick = () => {
+    if (isConnected) {
+      setToastMessage("Saved successfully!");
+      setToastType("bg-green-500");
+    } else {
+      setToastMessage("Error: All nodes are not connected");
+      setToastType("bg-red-500");
+    }
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
 
   useEffect(() => {
     setNodes((nds) =>
@@ -126,75 +151,91 @@ export default function ChatPanel() {
   }, [nodes, edges]);
 
   return (
-    <div className="flex flex-col h-full">
-      <ReactFlowProvider>
-        <div className="flex flex-grow">
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            defaultViewport={defaultViewport}
-            minZoom={0.2}
-            maxZoom={4}
-            attributionPosition="bottom-left"
-            onNodeClick={(evt, node) => {
-              setSelectedNode(node.id);
-              setNodeName(node.data.label);
-              setIsNodeSelected(true);
-            }}
-            onPaneClick={() => {
-              setSelectedNode(null);
-              setIsNodeSelected(false);
-            }}
-            onConnect={onConnect}
-            onInit={setReactFlowInstance}
-            onDrop={onDrop}
-            onDragOver={onDragOver}
-            nodeTypes={nodeTypes}
+    <>
+      <div className="relative">
+        <div className="bg-slate-200 py-2 px-4 text-end text-sm h-14 sticky top-0 flex justify-between items-center">
+          <h1 className="text-xl font-semibold">
+            BiteSpeed ChatBot Flow Builder
+          </h1>
+          <button
+            className="bg-white border border-blue-600 text-blue-600 font-bold py-2 px-10 rounded md:mr-10"
+            onClick={handleClick}
           >
-            <Controls />
-          </ReactFlow>
-          <div className="updatenode__controls border-2 border-gray-300 rounded-sm md:min-w-60 h-[calc(100vh-3.5rem)] fixed top-14 bottom-0 right-0">
-            {isNodeSelected ? (
-              <div>
-                <div className="flex justify-between items-center text-base border-b-2 py-2 px-4">
-                  <button
-                    onClick={() => {
-                      setSelectedNode(null);
-                      setIsNodeSelected(false);
-                    }}
-                  >
-                    <FaArrowLeft />
-                  </button>
-                  <span>Message</span>
-                  <span></span>
-                </div>
-                <div className="p-4">
-                  <label className="mb-2 text-gray-600">Text</label>
-                  <textarea
-                    value={nodeName}
-                    onChange={(evt) => setNodeName(evt.target.value)}
-                    className="border-2 border-gray-300 p-2 w-full mb-2 rounded-lg"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="p-4">
-                {" "}
-                <div
-                  className="text-blue-600 flex justify-center items-center flex-col border-2 border-blue-600 rounded-lg w-fit px-12 py-2"
-                  draggable
-                  onDragStart={(event) => onDragStart(event, "default")}
-                >
-                  <BiMessageRoundedDetail className="text-4xl" />
-                  <p>Message</p>
-                </div>
-              </div>
-            )}
-          </div>
+            Save Changes
+          </button>
         </div>
-      </ReactFlowProvider>
-    </div>
+        {showToast && <Toast message={toastMessage} type={toastType} />}
+      </div>
+      <div className="flex flex-col h-full">
+        <ReactFlowProvider>
+          <div className="flex flex-grow">
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              defaultViewport={defaultViewport}
+              minZoom={0.2}
+              maxZoom={4}
+              attributionPosition="bottom-left"
+              onNodeClick={(evt, node) => {
+                setSelectedNode(node.id);
+                setNodeName(node.data.label);
+                setIsNodeSelected(true);
+              }}
+              onPaneClick={() => {
+                setSelectedNode(null);
+                setIsNodeSelected(false);
+              }}
+              onConnect={onConnect}
+              onInit={setReactFlowInstance}
+              onDrop={onDrop}
+              onDragOver={onDragOver}
+              nodeTypes={nodeTypes}
+            >
+              <Controls />
+            </ReactFlow>
+            <div className="updatenode__controls border-2 border-gray-300 rounded-sm md:min-w-60 h-[calc(100vh-3.5rem)] fixed top-14 bottom-0 right-0 bg-white">
+              {isNodeSelected ? (
+                <div>
+                  <div className="flex justify-between items-center text-base border-b-2 py-2 px-4">
+                    <button
+                      onClick={() => {
+                        setSelectedNode(null);
+                        setIsNodeSelected(false);
+                      }}
+                    >
+                      <FaArrowLeft />
+                    </button>
+                    <span>Message</span>
+                    <span></span>
+                  </div>
+                  <div className="p-4">
+                    <label className="mb-2 text-gray-600">Text</label>
+                    <textarea
+                      value={nodeName}
+                      onChange={(evt) => setNodeName(evt.target.value)}
+                      className="border-2 border-gray-300 p-2 w-full mb-2 rounded-lg"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4">
+                  {" "}
+                  <div
+                    className="text-blue-600 flex justify-center items-center flex-col border-2 border-blue-600 rounded-lg w-fit px-12 py-2"
+                    draggable
+                    onDragStart={(event) => onDragStart(event, "default")}
+                  >
+                    <BiMessageRoundedDetail className="text-4xl" />
+                    <p>Message</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </ReactFlowProvider>
+      </div>
+    </>
   );
 }
