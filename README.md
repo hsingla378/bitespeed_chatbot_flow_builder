@@ -6,7 +6,7 @@ This is a simple chatbot flow builder built using React and [React Flow](https:/
 
 ## Demo
 
-You can try out the demo of the project [here](https://bitespeed-chatbot-flow-builder.netlify.app/).
+You can try out the demo of the project [here](https://bitespeed-chat-flow-builder.vercel.app/).
 
 ## Features
 
