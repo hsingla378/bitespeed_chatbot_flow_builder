@@ -7,6 +7,8 @@ import ReactFlow, {
 
 import "./ChatPanel.css";
 import { BiMessageRoundedDetail } from "react-icons/bi";
+import { FaArrowLeft } from "react-icons/fa6";
+
 import Sidebar from "./Sidebar";
 import SingleNdode from "./SingleNode";
 
@@ -71,8 +73,6 @@ export default function ChatBot() {
     );
   }, [nodeHidden, setNodes, setEdges]);
 
-  console.log("selectedNode", selectedNode);
-
   return (
     <div className="dndflow">
       <ReactFlowProvider>
@@ -97,20 +97,37 @@ export default function ChatBot() {
             }}
             nodeTypes={nodeTypes}
           ></ReactFlow>
-          <div className="updatenode__controls border-2 border-gray-300 rounde-sm md:min-w-60 h-[calc(100vh-3.5rem)] fixed top-14 bottom-0 right-0 p-4">
+          <div className="updatenode__controls border-2 border-gray-300 rounde-sm md:min-w-60 h-[calc(100vh-3.5rem)] fixed top-14 bottom-0 right-0">
             {isNodeSelected ? (
               <div>
-                <label>label:</label>
-                <input
-                  value={nodeName}
-                  onChange={(evt) => setNodeName(evt.target.value)}
-                  className="border-2 border-black rounded-sm p-1 w-full mb-2"
-                />
+                <div className="flex justify-between items-center text-base border-b-2 py-2 px-4">
+                  <button
+                    onClick={() => {
+                      setSelectedNode(null);
+                      setIsNodeSelected(false);
+                    }}
+                  >
+                    <FaArrowLeft />
+                  </button>
+                  <span>Message</span>
+                  <span></span>
+                </div>
+                <div className=" p-4">
+                  <label className="mb-2 text-gray-600">Text</label>
+                  <textarea
+                    value={nodeName}
+                    onChange={(evt) => setNodeName(evt.target.value)}
+                    className="border-2 border-gray-300  p-2 w-full mb-2 rounded-lg"
+                  />
+                </div>
               </div>
             ) : (
-              <div className="text-blue-600 flex justify-center items-center flex-col border-2 border-blue-600 rounded-lg w-fit px-12 py-2">
-                <BiMessageRoundedDetail className="text-4xl" />
-                <p>Message</p>
+              <div className="p-4">
+                {" "}
+                <div className="text-blue-600 flex justify-center items-center flex-col border-2 border-blue-600 rounded-lg w-fit px-12 py-2">
+                  <BiMessageRoundedDetail className="text-4xl" />
+                  <p>Message</p>
+                </div>
               </div>
             )}
           </div>

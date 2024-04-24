@@ -1,20 +1,37 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { BiMessageRoundedDetail } from "react-icons/bi";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { Handle, Position } from "reactflow";
 
 const handleStyle = { left: 10 };
 
-export default function SingleNdode({ data }) {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
+export default function SingleNdode({ data, selected, onClick }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   return (
-    <div className="border border-1 border-black rounded-lg overflow-hidden md:min-w-60 text-xs shadow-2xl">
+    <div
+      className={`border border-1 rounded-lg overflow-hidden md:min-w-60 text-xs shadow-2xl ${
+        selected ? "border-blue-500" : "border-black"
+      } ${isHovered ? "border-2" : ""}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={onClick}
+    >
       <Handle type="source" position={Position.Left} />
       <div>
-        <div className="flex justify-between items-center bg-green-200  px-4 py-[6px]">
+        <div
+          className={`flex justify-between items-center bg-green-200 px-4 py-[6px] ${
+            selected ? "bg-blue-200" : ""
+          }`}
+        >
           <div className="flex justify-center items-center gap-1">
             <BiMessageRoundedDetail />
             <span className="font-bold">Send Message</span>
@@ -26,12 +43,6 @@ export default function SingleNdode({ data }) {
         <p className="p-3">{data.label}</p>
       </div>
       <Handle type="target" position={Position.Right} id="a" />
-      {/* <Handle
-        type="source"
-        position={Position.Bottom}
-        id="b"
-        style={handleStyle}
-      /> */}
     </div>
   );
 }
