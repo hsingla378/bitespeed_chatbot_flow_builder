@@ -5,25 +5,24 @@ import ReactFlow, {
   ReactFlowProvider,
   addEdge,
   Controls,
+  getConnectedEdges,
 } from "reactflow";
 
-import "./ChatPanel.css";
 import { BiMessageRoundedDetail } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa6";
 
-import Sidebar from "./Sidebar";
-import SingleNdode from "./SingleNode";
+import SingleNode from "./SingleNode";
 
 const initialNodes = [
   {
     id: "1",
-    data: { label: "Node 1" },
+    data: { label: "text message 1" },
     position: { x: 100, y: 250 },
     type: "textUpdater",
   },
   {
     id: "2",
-    data: { label: "Node 2" },
+    data: { label: "text message 2" },
     position: { x: 400, y: 200 },
     type: "textUpdater",
   },
@@ -37,13 +36,14 @@ const defaultViewport = { x: 0, y: 0, zoom: 1.2 };
 let id = 2;
 const getId = () => `dndnode_${id++}`;
 
-export default function ChatBot() {
+export default function ChatPanel() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useState(null);
   const [isNodeSelected, setIsNodeSelected] = useState(false);
-  const nodeTypes = useMemo(() => ({ textUpdater: SingleNdode }), []);
+  const nodeTypes = useMemo(() => ({ textUpdater: SingleNode }), []);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   const [nodeName, setNodeName] = useState("Node 1");
   const [nodeHidden, setNodeHidden] = useState(false);
@@ -53,27 +53,23 @@ export default function ChatBot() {
     []
   );
 
-  console.log("nodes", nodes);
-
   useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
-        if (selectedNode && node.id == selectedNode) {
+        if (selectedNode && node.id === selectedNode) {
           node.data.label = nodeName;
         }
         return node;
       })
     );
-  }, [nodeName, nodes]);
+  }, [nodeName, setNodes, selectedNode]);
 
   useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
         if (node.id === "1") {
-          // when you update a simple type you can just update the value
           node.hidden = nodeHidden;
         }
-
         return node;
       })
     );
@@ -82,7 +78,6 @@ export default function ChatBot() {
         if (edge.id === "e1-2") {
           edge.hidden = nodeHidden;
         }
-
         return edge;
       })
     );
@@ -104,36 +99,36 @@ export default function ChatBot() {
 
       const type = event.dataTransfer.getData("application/reactflow");
 
-      // check if the dropped element is valid
       if (typeof type === "undefined" || !type) {
         return;
       }
 
-      // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
-      // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
       const newNode = {
         id: getId(),
-        data: { label: "Node " + parseInt(nodes.length + 1) },
+        data: { label: "text message " + parseInt(nodes.length + 1) },
         position: { x: 500, y: 100 },
         type: "textUpdater",
       };
-
-      // localStorage.setItem("nodes", JSON.stringify(nodes.concat(newNode)));
 
       setNodes((nds) => nds.concat(newNode));
     },
     [reactFlowInstance, nodes, setNodes]
   );
 
+  useEffect(() => {
+    const connectedEdges = getConnectedEdges(nodes, edges);
+    let isConnected = connectedEdges.length === nodes.length - 1;
+    setIsConnected(isConnected);
+  }, [nodes, edges]);
+
   return (
-    <div className="dndflow">
+    <div className="flex flex-col h-full">
       <ReactFlowProvider>
-        <div className="reactflow-wrapper">
+        <div className="flex flex-grow">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -160,7 +155,7 @@ export default function ChatBot() {
           >
             <Controls />
           </ReactFlow>
-          <div className="updatenode__controls border-2 border-gray-300 rounde-sm md:min-w-60 h-[calc(100vh-3.5rem)] fixed top-14 bottom-0 right-0">
+          <div className="updatenode__controls border-2 border-gray-300 rounded-sm md:min-w-60 h-[calc(100vh-3.5rem)] fixed top-14 bottom-0 right-0">
             {isNodeSelected ? (
               <div>
                 <div className="flex justify-between items-center text-base border-b-2 py-2 px-4">
@@ -175,12 +170,12 @@ export default function ChatBot() {
                   <span>Message</span>
                   <span></span>
                 </div>
-                <div className=" p-4">
+                <div className="p-4">
                   <label className="mb-2 text-gray-600">Text</label>
                   <textarea
                     value={nodeName}
                     onChange={(evt) => setNodeName(evt.target.value)}
-                    className="border-2 border-gray-300  p-2 w-full mb-2 rounded-lg"
+                    className="border-2 border-gray-300 p-2 w-full mb-2 rounded-lg"
                   />
                 </div>
               </div>
@@ -189,8 +184,8 @@ export default function ChatBot() {
                 {" "}
                 <div
                   className="text-blue-600 flex justify-center items-center flex-col border-2 border-blue-600 rounded-lg w-fit px-12 py-2"
-                  draggable // Add draggable attribute here
-                  onDragStart={(event) => onDragStart(event, "default")} // Handle dragstart event
+                  draggable
+                  onDragStart={(event) => onDragStart(event, "default")}
                 >
                   <BiMessageRoundedDetail className="text-4xl" />
                   <p>Message</p>
