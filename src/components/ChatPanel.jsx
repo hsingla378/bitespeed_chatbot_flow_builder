@@ -53,16 +53,18 @@ export default function ChatBot() {
     []
   );
 
+  console.log("nodes", nodes);
+
   useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
-        if (selectedNode && node.id === selectedNode.toString()) {
+        if (selectedNode && node.id == selectedNode) {
           node.data.label = nodeName;
         }
         return node;
       })
     );
-  }, [nodeName, setNodes]);
+  }, [nodeName, nodes]);
 
   useEffect(() => {
     setNodes((nds) =>

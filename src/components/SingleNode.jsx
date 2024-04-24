@@ -18,7 +18,7 @@ export default function SingleNdode({ data, selected, onClick }) {
 
   return (
     <div
-      className={`bg-white border  rounded-lg overflow-hidden md:min-w-60 max-w-60 text-xs shadow-2xl ${
+      className={`bg-white border-2  rounded-lg overflow-hidden md:min-w-60 max-w-60 text-xs shadow-2xl ${
         selected ? "border-blue-500" : "border-black"
       } ${isHovered ? "border-2" : ""}`}
       onMouseEnter={handleMouseEnter}
