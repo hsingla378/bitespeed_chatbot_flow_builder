@@ -90,7 +90,9 @@ export default function NodesPanel() {
   // Effect to check if all nodes are connected
   useEffect(() => {
     const connectedEdges = getConnectedEdges(nodes, edges);
-    let isConnected = connectedEdges.length === nodes.length - 1;
+    let isConnected =
+      connectedEdges.length === nodes.length - 1 ||
+      connectedEdges.length === nodes.length;
     setIsConnected(isConnected);
   }, [nodes, edges]);
 
@@ -143,7 +145,7 @@ export default function NodesPanel() {
         toastType={toastType}
       />
       {/* Main NodesPanel content */}
-      <div className="flex flex-col h-[calc(100%-8vh)]">
+      <div className="flex flex-col md:h-full h-[calc(100%-7vh)]">
         <ReactFlowProvider>
           <div className="flex flex-grow flex-col md:flex-row">
             {/* ReactFlow Panel */}

@@ -10,7 +10,7 @@ export default function SettingsPanel({
   onDragStart,
 }) {
   return (
-    <div className="border-0 flex justify-center items-center md:items-baseline md:justify-normal border-t-2 md:border-2 border-gray-300 h-8h rounded-sm md:min-w-60 md:h-[calc(100vh-3.5rem)] md:fixed md:top-14 bottom-0 right-0 bg-white">
+    <div className="border-0 flex justify-center items-center md:items-baseline md:justify-normal border-t-2 md:border-2 border-gray-300 h-7vh rounded-sm md:min-w-60 md:h-[calc(100vh-3.5rem)] md:fixed md:top-14 bottom-0 right-0 bg-white">
       {isNodeSelected ? (
         <div>
           <div className="flex justify-between items-center text-base border-b-2 py-2 px-4">
@@ -31,6 +31,13 @@ export default function SettingsPanel({
               value={nodeName}
               onChange={(evt) => setNodeName(evt.target.value)}
               className="border-2 border-gray-300 p-2 w-full mb-2 rounded-lg"
+              onKeyDown={(evt) => {
+                if (evt.key === "Enter" && !evt.shiftKey) {
+                  setSelectedNode(null);
+                  setIsNodeSelected(false);
+                  // Clear selected node and deselect
+                }
+              }}
             />
           </div>
         </div>
